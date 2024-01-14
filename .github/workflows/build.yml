@@ -29,7 +29,7 @@ jobs:
       run: echo "THEOS=~/theos" >> $GITHUB_ENV
 
     - name: Make IPA
-      run: ./ipabuild.sh
+      run: make
 
     - name: Upload Artifact
       uses: actions/upload-artifact@v3
