@@ -3,6 +3,8 @@ name: Build Helium
 on:
   push:
     branches: [ main ]
+  pull_request:
+    branches: [ "main" ]
   workflow_dispatch:
 
 jobs:
@@ -11,6 +13,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+      with:
+        submodules: true
 
     - name: Update submodules
       run: git submodule update --init --recursive
