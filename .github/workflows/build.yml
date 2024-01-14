@@ -1,34 +1,44 @@
-name: Build and Package
+name: Build Helium
 
 on:
   push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+    branches: [ main ]
   workflow_dispatch:
 
 jobs:
   build:
-    name: Build Helium
-    runs-on: macos-latest
+    runs-on: macos-13
 
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-        with:
-          submodules: true
+  steps:
+    - uses: actions/checkout@v3
 
-      - name: Install Theos
-        run: bash -c "$(curl -fsSL https://raw.githubusercontent.com/roothide/theos/master/bin/install-theos)"
+    - name: Update submodules
+      run: git submodule update --init --recursive
+      
+    - name: Switch to Xcode 15
+      run: sudo xcode-select -s /Applications/Xcode_15.0.app
 
-      - name: Setup Environment
-        run: echo "THEOS=~/theos" >> $GITHUB_ENV
+    - name: Install theos
+      run: bash -c "$(curl -fsSL https://raw.githubusercontent.com/roothide/theos/master/bin/install-theos)"
+    
+    - name: Setup Environment
+      run: echo "THEOS=~/theos" >> $GITHUB_ENV
 
-      - name: Make IPA
-        run: ./ipabuild.sh
+    - name: Download ct_bypass to /usr/local/bin
+      run: |
+        curl -L -o /usr/local/bin/ct_bypass https://cdn.mineek.dev/serotonin/action_deps/ct_bypass
+        chmod +x /usr/local/bin/ct_bypass
 
-      - name: Upload Artifact
-        uses: actions/upload-artifact@v3
-        with:
+    - name: Install ldid
+      run: |
+        brew unlink ldid
+        brew install ldid-procursus
+
+    - name: Make IPA
+      run: ./ipabuild.sh
+
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v3
+      with:
           name: Helium.ipa
-          path: build/Helium.ipa
+          path: Helium.ipa
