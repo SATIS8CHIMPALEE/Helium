@@ -9,7 +9,7 @@ jobs:
   build:
     runs-on: macos-13
 
-  steps:
+    steps:
     - uses: actions/checkout@v3
 
     - name: Update submodules
@@ -20,9 +20,6 @@ jobs:
 
     - name: Install theos
       run: bash -c "$(curl -fsSL https://raw.githubusercontent.com/roothide/theos/master/bin/install-theos)"
-    
-    - name: Setup Environment
-      run: echo "THEOS=~/theos" >> $GITHUB_ENV
 
     - name: Download ct_bypass to /usr/local/bin
       run: |
