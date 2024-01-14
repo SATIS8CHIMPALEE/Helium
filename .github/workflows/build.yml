@@ -25,6 +25,9 @@ jobs:
     - name: Install theos
       run: bash -c "$(curl -fsSL https://raw.githubusercontent.com/roothide/theos/master/bin/install-theos)"
 
+    - name: Setup Environment
+      run: echo "THEOS=~/theos" >> $GITHUB_ENV
+
     - name: Make IPA
       run: ./ipabuild.sh
 
